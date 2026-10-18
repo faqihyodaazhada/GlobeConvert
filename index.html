@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#243d55">
+  <meta name="description" content="GlobeConvert — kalkulator konversi mata uang dunia dengan kurs online.">
+  <title>GlobeConvert — World Currency Dashboard</title>
+  <link rel="preconnect" href="https://open.er-api.com">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="GlobeConvert beranda">
+        <span class="brand-globe" aria-hidden="true">🌎</span>
+        <span><strong>GlobeConvert</strong><small>World Currency Dashboard</small></span>
+      </a>
+      <label class="search-box">
+        <span aria-hidden="true">⌕</span>
+        <input id="currencySearch" type="search" placeholder="Cari mata uang..." autocomplete="off" aria-label="Cari mata uang">
+      </label>
+      <div class="top-actions">
+        <button class="icon-button" id="refreshBtn" type="button" title="Perbarui kurs" aria-label="Perbarui kurs">↻</button>
+        <button class="profile-button" type="button" aria-label="Profil">👤</button>
+      </div>
+    </header>
+
+    <aside class="sidebar" aria-label="Navigasi utama">
+      <div class="sidebar-user"><div class="avatar">🌐</div><strong>Hai, teman!</strong><small>Jelajahi mata uang dunia</small></div>
+      <nav>
+        <a class="nav-link active" href="#converter"><span>⇄</span> Converter</a>
+        <a class="nav-link" href="#rates"><span>⌁</span> Exchange rates</a>
+        <a class="nav-link" href="#favorites"><span>☆</span> Favorites</a>
+        <a class="nav-link" href="#history"><span>◷</span> History</a>
+        <a class="nav-link" href="#settings"><span>⚙</span> Settings</a>
+      </nav>
+      <div class="sidebar-note"><span>✨</span><strong>Global currency,<br>local convenience.</strong><small>Konversi mata uang dengan mudah.</small></div>
+    </aside>
+
+    <main class="main-content">
+      <section class="hero panel">
+        <div class="hero-copy">
+          <span class="eyebrow">YOUR CURRENCY COMPANION</span>
+          <h1>Hey there!<br><em>Ready to convert?</em></h1>
+          <p>Jelajahi mata uang di seluruh dunia dalam beberapa detik.</p>
+          <a class="hero-cta" href="#converter">Mulai konversi <span>↗</span></a>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div>
+          <span class="cloud cloud-a">☁</span><span class="cloud cloud-b">☁</span>
+          <div class="earth">🌎</div>
+          <span class="coin coin-usd">$</span><span class="coin coin-eur">€</span>
+          <span class="sparkle sparkle-a">✦</span><span class="sparkle sparkle-b">✧</span>
+        </div>
+      </section>
+
+      <section class="converter panel" id="converter">
+        <div class="section-heading">
+          <div><span class="eyebrow">FAST & SIMPLE</span><h2>Currency converter</h2></div>
+          <span class="live-pill"><i></i> Online rates</span>
+        </div>
+        <div class="converter-grid">
+          <div class="money-field">
+            <label for="amount">You send</label>
+            <input id="amount" type="number" min="0" step="any" value="10000" inputmode="decimal">
+            <div class="select-wrap"><span class="flag" id="fromFlag">🇮🇩</span><select id="fromCurrency" aria-label="Mata uang asal"></select></div>
+          </div>
+          <button class="swap-button" id="swapBtn" type="button" aria-label="Tukar mata uang" title="Tukar mata uang">⇄</button>
+          <div class="money-field">
+            <label for="resultAmount">You receive</label>
+            <output id="resultAmount" class="result-amount">Memuat...</output>
+            <div class="select-wrap"><span class="flag" id="toFlag">🇺🇸</span><select id="toCurrency" aria-label="Mata uang tujuan"></select></div>
+          </div>
+        </div>
+        <div class="conversion-footer">
+          <div><strong id="rateLine">Mengambil nilai tukar...</strong><small id="updatedLine">Nilai indikatif, bukan kurs transaksi bank.</small></div>
+          <button class="primary-button" id="convertBtn" type="button">Konversi sekarang <span>→</span></button>
+        </div>
+        <p class="message" id="statusMessage" role="status">Menghubungkan ke layanan kurs...</p>
+      </section>
+
+      <section class="stats-grid" aria-label="Ringkasan">
+        <article class="stat-card panel"><span class="stat-icon">◎</span><span class="stat-label">Mata uang tersedia</span><strong id="currencyCount">—</strong><small>Didukung layanan kurs</small></article>
+        <article class="stat-card panel"><span class="stat-icon">⇄</span><span class="stat-label">Pasangan favorit</span><strong id="savedCount">0</strong><small>Tersimpan di perangkat ini</small></article>
+        <article class="stat-card panel"><span class="stat-icon">◷</span><span class="stat-label">Pembaruan data</span><strong class="stat-word">Online</strong><small id="updateDate">Menunggu data kurs</small></article>
+        <article class="stat-card panel"><span class="stat-icon">☆</span><span class="stat-label">Favorit</span><strong id="favoriteCount">0</strong><small>Pasangan tersimpan</small></article>
+      </section>
+
+      <section class="data-grid">
+        <article class="panel data-panel" id="favorites">
+          <div class="section-heading compact"><div><span class="eyebrow">YOUR OVERVIEW</span><h2>Popular currencies</h2></div><button class="text-button" id="saveFavoriteBtn" type="button">♡ Simpan pasangan</button></div>
+          <div class="chart-wrap"><canvas id="currencyChart" aria-label="Grafik popularitas mata uang" role="img"></canvas><div class="chart-center"><strong>Top</strong><b>4</b></div></div>
+          <div class="chart-legend" id="chartLegend"></div>
+          <p class="chart-note">Grafik menunjukkan perbandingan ilustratif mata uang populer, bukan volume transaksi pasar.</p>
+        </article>
+
+        <article class="panel data-panel" id="rates">
+          <div class="section-heading compact"><div><span class="eyebrow">MARKET SNAPSHOT</span><h2>Exchange rates</h2></div><span class="live-pill"><i></i> Rates</span></div>
+          <div class="rate-list" id="rateList">
+            <div class="loading-row">Memuat data kurs...</div>
+          </div>
+          <button class="wide-button" id="showMoreRates" type="button">Lihat mata uang lainnya <span>↓</span></button>
+        </article>
+      </section>
+
+      <section class="panel quick-panel" id="history">
+        <div class="section-heading compact"><div><span class="eyebrow">ONE-TAP CONVERSION</span><h2>Quick convert</h2><p>Pilih pasangan mata uang untuk memulai lebih cepat.</p></div><a class="text-button" href="#rates">Lihat semua kurs ↗</a></div>
+        <div class="quick-list">
+          <button class="quick-currency" data-currency="USD" type="button"><span class="flag">🇺🇸</span><span><strong>USD</strong><small>Dolar AS</small></span><span class="quick-arrow">›</span></button>
+          <button class="quick-currency" data-currency="EUR" type="button"><span class="flag">🇪🇺</span><span><strong>EUR</strong><small>Euro</small></span><span class="quick-arrow">›</span></button>
+          <button class="quick-currency" data-currency="JPY" type="button"><span class="flag">🇯🇵</span><span><strong>JPY</strong><small>Yen Jepang</small></span><span class="quick-arrow">›</span></button>
+          <button class="quick-currency" data-currency="MYR" type="button"><span class="flag">🇲🇾</span><span><strong>MYR</strong><small>Ringgit Malaysia</small></span><span class="quick-arrow">›</span></button>
+        </div>
+      </section>
+
+      <section class="panel history-panel" id="settings">
+        <div><span class="eyebrow">THIS DEVICE</span><h2>Recent conversions</h2><p>Riwayat terakhir disimpan di browser ini saja.</p></div>
+        <div id="historyList" class="history-list"><p class="empty-state">Belum ada riwayat. Lakukan konversi untuk mulai.</p></div>
+        <button class="text-button" id="clearHistoryBtn" type="button">Hapus riwayat</button>
+      </section>
+
+      <footer class="footer"><span>🌎</span><strong>GlobeConvert</strong><span class="footer-dot">•</span> Global Currency, Local Convenience <span class="footer-right">Made for everywhere ✦</span></footer>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
